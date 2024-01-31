@@ -39,11 +39,104 @@
 
   Testing the server - run `npm run test-todoServer` command in terminal
  */
+  let toDoList=[];
   const express = require('express');
   const bodyParser = require('body-parser');
   
   const app = express();
-  
+
   app.use(bodyParser.json());
+  app.get("/todos",function(req,res)
+  {
+    // const numberOfItems=toDoList.length;
+    // for(let i=0;i<numberOfItems;i++)
+    // {
+    //   const title=toDoList[i].title;
+    //   const description=toDoList[i].description;
+    //   const id=toDoList[i].id;
+    //   toDoTemp.push({title:title,description:description,id:id});
+    // }
+    res.json(toDoList);
+  })
+
+  app.get("/todos/:id",function(req,res){
+    const toDoId=req.params.id;
+    const numberOfItems=toDoList.length;
+    let flag=false;
+    for(let i=0;i<numberOfItems;i++)
+    {
+      const idNumber=toDoList[i].id;
+      if(idNumber==toDoId)
+      {
+        flag=true;
+        res.json(toDoList[i]);
+      }
+    }
+    if(flag==false)
+    {
+      res.status(404).send("Id not found")
+    }
+  })
+
+  app.post("/todos",function(req,res){
+    const title=req.body.title;
+    const description=req.body.description;
+    const isCompleted=req.body.completed;
+    const id=new Date().valueOf();
+    toDoList.push({title:title,description:description,id:id,completed:isCompleted})
+    res.json(id);
+  })
+
+  app.put("/todos/:id",function(req,res){
+    const status=req.body.completed;
+    console.log(status);
+    const id=req.params.id;
+    let flag=false;
+    const numberOfItems=toDoList.length;
+    for(let i=0;i<numberOfItems;i++)
+    {
+      if(toDoList[i].id==id)
+      {
+        console.log(toDoList[i].title)
+        console.log("Hi")
+        flag=true;
+        toDoList[i].completed=status;
+        res.status(200).send("Status Updated")
+      }
+    }
+    if(flag==false)
+    {
+      res.status(404).send("Id not found");
+    }
+  })
+
+  app.delete("/todos/:id",function(req,res){
+    let newToDoList=[];
+    const id=req.params.id;
+    let flag=false;
+    const numberOfItems=toDoList.length;
+    for(let i=0;i<numberOfItems;i++)
+    {
+      if(toDoList[i].id!=id)
+      {
+        newToDoList.push(toDoList[i]);
+      }
+      else{
+        flag=true;
+      }
+    }
+    if(flag==false)
+    {
+      res.status(404).send("Id not found")
+    }
+    else{
+      toDoList=newToDoList;
+      res.status(200).send("Todo item deleted");
+    }
+  })
+
+  app.listen(3000,()=>{
+    console.log("Server is listening to PORT 3000")
+  })
   
   module.exports = app;
