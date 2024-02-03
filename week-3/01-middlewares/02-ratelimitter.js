@@ -1,5 +1,3 @@
-const request = require('supertest');
-const assert = require('assert');
 const express = require('express');
 const app = express();
 // You have been given an express server which has a few endpoints.
@@ -15,6 +13,13 @@ let numberOfRequestsForUser = {};
 setInterval(() => {
     numberOfRequestsForUser = {};
 }, 1000)
+
+function rateLimitterMiddleware(req,res,next)
+{
+
+}
+
+app.use(rateLimitterMiddleware);
 
 app.get('/user', function(req, res) {
   res.status(200).json({ name: 'john' });

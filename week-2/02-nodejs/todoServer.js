@@ -89,7 +89,7 @@
 
   app.put("/todos/:id",function(req,res){
     const status=req.body.completed;
-    console.log(status);
+    // console.log(status);
     const id=req.params.id;
     let flag=false;
     const numberOfItems=toDoList.length;
@@ -97,8 +97,6 @@
     {
       if(toDoList[i].id==id)
       {
-        console.log(toDoList[i].title)
-        console.log("Hi")
         flag=true;
         toDoList[i].completed=status;
         res.status(200).send("Status Updated")
